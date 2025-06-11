@@ -1,0 +1,139 @@
+﻿@page "/details/{recordId:guid}"
+@using Microsoft.EntityFrameworkCore
+@using CHHA_PlanOfCorrectinAudit.Models
+@inject IDbContextFactory<CHHA_PlanOfCorrectionAudit.Data.CHHA_PlanOfCorrectionAuditContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<Details> Logger
+
+
+<PageTitle>Details</PageTitle>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (metadata == null)
+{
+    <p class="text-danger">Record not found.</p>
+}
+else
+{
+    <h1>@metadata.Form</h1>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            Patient Info
+        </div>
+        <div class="card-body">
+            <p><strong>Patient MRN:</strong> @metadata.Patient_MRN</p>
+            <p><strong>Patient Name:</strong> @metadata.Patient_Name</p>
+            <p><strong>Patient Status:</strong> @metadata.Patient_Status</p>
+            <p><strong>Program:</strong> @metadata.Program</p>
+            <p><strong>Borough of Care:</strong> @metadata.Borough_of_Care</p>
+            <p><strong>Start of Care Date:</strong> @metadata.Start_of_Care_Date?.ToString("yyyy-MM-dd")</p>
+            <p><strong>Financial Class:</strong> @metadata.Financial_Class</p>
+            <p><strong>Payer:</strong> @metadata.Payer</p>
+            <p><strong>Category:</strong> @metadata.Category</p>
+            <p><strong>Assigned Reviewer:</strong> @metadata.Assigned_Reviewer</p>
+            <p><strong>Date Assigned:</strong> @metadata.Date_Assigned?.ToString("yyyy-MM-dd")</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            Review Responses
+        </div>
+        <div class="card-body">
+            @if (responses == null || responses.Count == 0)
+            {
+                <p>No responses found.</p>
+            }
+            else
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Response</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var resp in responses)
+                        {
+                            <tr>
+                                <td>@resp.Question</td>
+                                <td>@resp.Response</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+
+
+    <p>
+        <a class="btn btn-secondary" @onclick="GoBack">Go Back</a>
+        <a class="btn btn-sm btn-warning" href="/edit/@metadata.RecordId">Edit</a>
+    </p>
+
+@*     <p>
+        <button class="btn btn-primary" @onclick="LogToServerConsole">Test Log</button>
+    </p>
+
+    <p>@testMessage</p> <!-- Display the test message so we can see if it changes --> *@
+}
+
+@code {
+    [Parameter]
+    public Guid recordId { get; set; }
+
+    private bool isLoading = true;
+    private CHHA_Quality_POC_Metadata? metadata;
+    private List<CHHA_Quality_POC_Responses> responses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            using var context = DbFactory.CreateDbContext();
+
+            // Find the metadata record by RecordId
+            metadata = await context.CHHA_Quality_POC_Metadata
+                .FirstOrDefaultAsync(m => m.RecordId == recordId);
+
+            if (metadata != null)
+            {
+                // Load all associated responses for this metadata record
+                responses = await context.CHHA_Quality_POC_Responses
+                    .Where(r => r.RecordId == recordId)
+                    .OrderBy(r => r.Question)
+                    .ToListAsync();
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+
+    private string testMessage = "Button not clicked yet";
+
+    private void LogToServerConsole() {
+        Console.WriteLine("\n\n\n Button Clicked\n\n\n");
+        testMessage = "Button was clicked!";
+        NavigationManager.NavigateTo("/HHA_Chart_Reviews");
+
+    }
+
+    private async Task GoBack() {
+        await JSRuntime.InvokeVoidAsync("window.history.back");
+    }
+}

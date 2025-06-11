@@ -1,0 +1,368 @@
+﻿@page "/Plan_Of_Care/create"
+@using Microsoft.EntityFrameworkCore
+@using CHHA_PlanOfCorrectinAudit.Models
+@using CHHA_PlanOfCorrectinAudit.ViewModel
+@inject IDbContextFactory<CHHA_PlanOfCorrectionAudit.Data.CHHA_PlanOfCorrectionAuditContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<PageTitle>Create Plan_Of_Care Review</PageTitle>
+
+<h1>Create Plan_Of_Care Review</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="formModel_mv" OnValidSubmit="AddFormData" FormName="create">
+
+            @* <!-- Form Fields --> *@
+
+            <div class="mb-3">
+                <label for="Patient_MRN" class="form-label">Patient MRN:</label>
+                <InputText id="Patient_MRN" @bind-Value="formModel_mv.Patient_MRN" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Patient_MRN" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Patient_Name" class="form-label">Patient Name:</label>
+                <InputText id="Patient_Name" @bind-Value="formModel_mv.Patient_Name" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Patient_Name" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Patient_Status" class="form-label">Patient Status:</label>
+                <InputText id="Patient_Status" @bind-Value="formModel_mv.Patient_Status" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Patient_Status" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Program" class="form-label">Program:</label>
+                <InputText id="Program" @bind-Value="formModel_mv.Program" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Program" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Borough_of_Care" class="form-label">Borough of Care:</label>
+                <InputText id="Borough_of_Care" @bind-Value="formModel_mv.Borough_of_Care" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Borough_of_Care" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Start_of_Care_Date" class="form-label">Start of Care Date:</label>
+                <InputDate @bind-Value="formModel_mv.Start_of_Care_Date" id="Start_of_Care_Date" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Start_of_Care_Date" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Financial_Class" class="form-label">Financial Class:</label>
+                <InputText id="Financial_Class" @bind-Value="formModel_mv.Financial_Class" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Financial_Class" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Payer" class="form-label">Payer:</label>
+                <InputText id="Payer" @bind-Value="formModel_mv.Payer" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Payer" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Category" class="form-label">Category:</label>
+                <InputText id="Category" @bind-Value="formModel_mv.Category" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Category" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Assigned_Reviewer" class="form-label">Assigned Reviewer:</label>
+                <InputText id="Assigned_Reviewer" @bind-Value="formModel_mv.Assigned_Reviewer" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Assigned_Reviewer" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Date_Assigned" class="form-label">Date Assigned:</label>
+                <InputDate @bind-Value="formModel_mv.Date_Assigned" id="Date_Assigned" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Date_Assigned" class="text-danger" />
+            </div>
+
+
+
+            @* Response Fields: *@
+
+
+            <div class="mb-3">
+                <label for="DateOfReview" class="form-label">Date of Review:</label>
+                <InputDate id="DateOfReview" @bind-Value="formModel_mv.DateOfReview" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.DateOfReview" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Is_Diabetic_Patient_With_Wound" class="form-label">Is this a patient diagnosed with Diabetes who also has a wound?</label>
+                <InputText id="Is_Diabetic_Patient_With_Wound" @bind-Value="formModel_mv.Is_Diabetic_Patient_With_Wound" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Is_Diabetic_Patient_With_Wound" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Vital_Signs_Documented_Every_Visit" class="form-label">Are vital signs documented in encounter note at every visit?</label>
+                <InputText id="Vital_Signs_Documented_Every_Visit" @bind-Value="formModel_mv.Vital_Signs_Documented_Every_Visit" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Vital_Signs_Documented_Every_Visit" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Vital_Signs_Documented_Within_5_Days_Of_SOC" class="form-label">Are vital sign parameters documented within five days of Start of Care?</label>
+                <InputText id="Vital_Signs_Documented_Within_5_Days_Of_SOC" @bind-Value="formModel_mv.Vital_Signs_Documented_Within_5_Days_Of_SOC" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Vital_Signs_Documented_Within_5_Days_Of_SOC" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="SN_CarePlan_Interventions_Addr_By_Nurse" class="form-label">Care Plan Summary Interventions were Addressed by Skilled Nurse?</label>
+                <InputText id="SN_CarePlan_Interventions_Addr_By_Nurse" @bind-Value="formModel_mv.SN_CarePlan_Interventions_Addr_By_Nurse" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.SN_CarePlan_Interventions_Addr_By_Nurse" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="SN_CarePlan_Freq_Of_Interventions_Met" class="form-label">Skilled Nurse Care Plan Frequency of Interventions Met?</label>
+                <InputText id="SN_CarePlan_Freq_Of_Interventions_Met" @bind-Value="formModel_mv.SN_CarePlan_Freq_Of_Interventions_Met" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.SN_CarePlan_Freq_Of_Interventions_Met" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="PT_CarePlan_Interventions_Addr" class="form-label">Care Plan Summary Interventions were Addressed by Physical Therapist?</label>
+                <InputText id="PT_CarePlan_Interventions_Addr" @bind-Value="formModel_mv.PT_CarePlan_Interventions_Addr" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.PT_CarePlan_Interventions_Addr" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="PT_CarePlan_Freq_Of_Interventions_Met" class="form-label">Physical Therapist Care Plan Frequency of Interventions Met?</label>
+                <InputText id="PT_CarePlan_Freq_Of_Interventions_Met" @bind-Value="formModel_mv.PT_CarePlan_Freq_Of_Interventions_Met" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.PT_CarePlan_Freq_Of_Interventions_Met" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="OT_CarePlan_Interventions_Addr" class="form-label">Care Plan Summary Interventions were Addressed by Occupational Therapist?</label>
+                <InputText id="OT_CarePlan_Interventions_Addr" @bind-Value="formModel_mv.OT_CarePlan_Interventions_Addr" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.OT_CarePlan_Interventions_Addr" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="OT_CarePlan_Freq_Of_Interventions_Met" class="form-label">Occupational Therapist Care Plan Frequency of Interventions Met?</label>
+                <InputText id="OT_CarePlan_Freq_Of_Interventions_Met" @bind-Value="formModel_mv.OT_CarePlan_Freq_Of_Interventions_Met" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.OT_CarePlan_Freq_Of_Interventions_Met" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="SW_CarePlan_Interventions_Addr" class="form-label">Care Plan Summary Interventions were Addressed by Social Worker?</label>
+                <InputText id="SW_CarePlan_Interventions_Addr" @bind-Value="formModel_mv.SW_CarePlan_Interventions_Addr" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.SW_CarePlan_Interventions_Addr" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="SW_CarePlan_Freq_Of_Interventions_Met" class="form-label">Social Worker Care Plan Frequency of Interventions Met?</label>
+                <InputText id="SW_CarePlan_Freq_Of_Interventions_Met" @bind-Value="formModel_mv.SW_CarePlan_Freq_Of_Interventions_Met" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.SW_CarePlan_Freq_Of_Interventions_Met" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="DM_Wound_POC_Interventions_Present" class="form-label">Diabetes Management & Wound Interventions present on POC?</label>
+                <InputText id="DM_Wound_POC_Interventions_Present" @bind-Value="formModel_mv.DM_Wound_POC_Interventions_Present" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.DM_Wound_POC_Interventions_Present" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="DM_Wound_Interventions_Addr_By_Clinician" class="form-label">Diabetes Management & Wound interventions addressed by Clinician?</label>
+                <InputText id="DM_Wound_Interventions_Addr_By_Clinician" @bind-Value="formModel_mv.DM_Wound_Interventions_Addr_By_Clinician" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.DM_Wound_Interventions_Addr_By_Clinician" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Case_Closure_Date" class="form-label">Case Closure Date:</label>
+                <InputDate id="Case_Closure_Date" @bind-Value="formModel_mv.Case_Closure_Date" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Case_Closure_Date" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Chart_Review_Status" class="form-label">Chart Review Status:</label>
+                <InputText id="Chart_Review_Status" @bind-Value="formModel_mv.Chart_Review_Status" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Chart_Review_Status" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Chart_Review_Outcome" class="form-label">Chart Review Outcome:</label>
+                <InputText id="Chart_Review_Outcome" @bind-Value="formModel_mv.Chart_Review_Outcome" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Chart_Review_Outcome" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Responsible_Clinician_Staff" class="form-label">Responsible Clinician(s) or Staff:</label>
+                <InputText id="Responsible_Clinician_Staff" @bind-Value="formModel_mv.Responsible_Clinician_Staff" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Responsible_Clinician_Staff" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Responsible_Director" class="form-label">Responsible Director:</label>
+                <InputText id="Responsible_Director" @bind-Value="formModel_mv.Responsible_Director" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Responsible_Director" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Date_of_Escalation_to_Director" class="form-label">Date of Escalation to Director:</label>
+                <InputDate id="Date_of_Escalation_to_Director" @bind-Value="formModel_mv.Date_of_Escalation_to_Director" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Date_of_Escalation_to_Director" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Column1" class="form-label">Staff Last Name (formula):</label>
+                <InputText id="Column1" @bind-Value="formModel_mv.Column1" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Column1" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Corrected_Staff_Name" class="form-label">Corrected Staff Name:</label>
+                <InputText id="Corrected_Staff_Name" @bind-Value="formModel_mv.Corrected_Staff_Name" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Corrected_Staff_Name" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Notes" class="form-label">Notes:</label>
+                <InputText id="Notes" @bind-Value="formModel_mv.Notes" class="form-control" />
+                <ValidationMessage For="() => formModel_mv.Notes" class="text-danger" />
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/metadata">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private FormInputModel_PlanOfCare formModel_mv { get; set; } = new();
+
+    protected override void OnInitialized() {
+        Console.WriteLine("✅ THIS IS A TEST Console.WriteLine OUTPUT for form3");
+        formModel_mv.FormName = "Plan Of Care";
+
+        // Key can be calculated or left empty as you use it in your logic
+        formModel_mv.Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}";
+
+
+    }
+
+    private CHHA_Quality_POC_Responses CreateResponse(string question, string? response, CHHA_Quality_POC_Metadata metadata, Guid recordId, string username) {
+        return new CHHA_Quality_POC_Responses {
+                Patient_MRN = formModel_mv.Patient_MRN,
+                Date_Assigned = formModel_mv.Date_Assigned,
+                Question = question,
+                Response = response,
+                MetadataId = metadata.Id,
+                Form = formModel_mv.FormName,
+                Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}",
+                CreatedBy = username,
+                CreatedDate = DateTime.UtcNow,
+                LastUpdatedBy = username,
+                LastUpdated = DateTime.UtcNow,
+                OriginalRecordId = recordId,
+                RecordId = recordId,
+                IsCurrentVersion = true
+            };
+    }
+
+    // private void AddFormData() {
+    private async Task AddFormData() {
+
+        Console.WriteLine("Form submission started");
+
+        var username = HttpContextAccessor.HttpContext?.User?.Identity?.Name ?? "UnknownUser";
+        var newRecordId = Guid.NewGuid();
+
+        using var context = DbFactory.CreateDbContext();
+
+        var metadata = await context.CHHA_Quality_POC_Metadata
+            .FirstOrDefaultAsync(m => m.Patient_MRN == formModel_mv.Patient_MRN);
+
+
+
+        if (metadata == null) {
+            metadata = new CHHA_Quality_POC_Metadata {
+                    Patient_MRN = formModel_mv.Patient_MRN,
+                    Patient_Name = formModel_mv.Patient_Name,
+                    Patient_Status = formModel_mv.Patient_Status,
+                    Program = formModel_mv.Program,
+                    Borough_of_Care = formModel_mv.Borough_of_Care,
+                    Start_of_Care_Date = formModel_mv.Start_of_Care_Date,
+                    Financial_Class = formModel_mv.Financial_Class,
+                    Payer = formModel_mv.Payer,
+                    Category = formModel_mv.Category,
+                    Assigned_Reviewer = formModel_mv.Assigned_Reviewer,
+                    Date_Assigned = formModel_mv.Date_Assigned,
+                    Form = formModel_mv.FormName,
+                    Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}",
+
+                // Audit fields here:
+                    CreatedBy = username,
+                    CreatedDate = DateTime.UtcNow,
+                    LastUpdatedBy = username,
+                    LastUpdated = DateTime.UtcNow,
+                    OriginalRecordId = newRecordId,
+                    RecordId = newRecordId,
+                    IsCurrentVersion = true
+
+                };
+
+            context.CHHA_Quality_POC_Metadata.Add(metadata);
+            await context.SaveChangesAsync();
+        }
+
+        var responses = new List<CHHA_Quality_POC_Responses>{
+            CreateResponse("DateOfReview", formModel_mv.DateOfReview?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+
+            CreateResponse("Is_Diabetic_Patient_With_Wound", formModel_mv.Is_Diabetic_Patient_With_Wound?.ToString(), metadata, newRecordId, username),
+            CreateResponse("Vital_Signs_Documented_Every_Visit", formModel_mv.Vital_Signs_Documented_Every_Visit?.ToString(), metadata, newRecordId, username),
+            CreateResponse("Vital_Signs_Documented_Within_5_Days_Of_SOC", formModel_mv.Vital_Signs_Documented_Within_5_Days_Of_SOC?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("SN_CarePlan_Interventions_Addr_By_Nurse", formModel_mv.SN_CarePlan_Interventions_Addr_By_Nurse?.ToString(), metadata, newRecordId, username),
+            CreateResponse("SN_CarePlan_Freq_Of_Interventions_Met", formModel_mv.SN_CarePlan_Freq_Of_Interventions_Met?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("PT_CarePlan_Interventions_Addr", formModel_mv.PT_CarePlan_Interventions_Addr?.ToString(), metadata, newRecordId, username),
+            CreateResponse("PT_CarePlan_Freq_Of_Interventions_Met", formModel_mv.PT_CarePlan_Freq_Of_Interventions_Met?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("OT_CarePlan_Interventions_Addr", formModel_mv.OT_CarePlan_Interventions_Addr?.ToString(), metadata, newRecordId, username),
+            CreateResponse("OT_CarePlan_Freq_Of_Interventions_Met", formModel_mv.OT_CarePlan_Freq_Of_Interventions_Met?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("SW_CarePlan_Interventions_Addr", formModel_mv.SW_CarePlan_Interventions_Addr?.ToString(), metadata, newRecordId, username),
+            CreateResponse("SW_CarePlan_Freq_Of_Interventions_Met", formModel_mv.SW_CarePlan_Freq_Of_Interventions_Met?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("DM_Wound_POC_Interventions_Present", formModel_mv.DM_Wound_POC_Interventions_Present?.ToString(), metadata, newRecordId, username),
+            CreateResponse("DM_Wound_Interventions_Addr_By_Clinician", formModel_mv.DM_Wound_Interventions_Addr_By_Clinician?.ToString(), metadata, newRecordId, username),
+
+            CreateResponse("Case_Closure_Date", formModel_mv.Case_Closure_Date?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("Chart_Review_Status", formModel_mv.Chart_Review_Status, metadata, newRecordId, username),
+            CreateResponse("Chart_Review_Outcome", formModel_mv.Chart_Review_Outcome, metadata, newRecordId, username),
+            CreateResponse("Responsible_Clinician_Staff", formModel_mv.Responsible_Clinician_Staff, metadata, newRecordId, username),
+            CreateResponse("Responsible_Director", formModel_mv.Responsible_Director, metadata, newRecordId, username),
+            CreateResponse("Date_of_Escalation_to_Director", formModel_mv.Date_of_Escalation_to_Director?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("Column1", formModel_mv.Column1, metadata, newRecordId, username),
+            CreateResponse("Corrected_Staff_Name", formModel_mv.Corrected_Staff_Name, metadata, newRecordId, username),
+            CreateResponse("Notes", formModel_mv.Notes, metadata, newRecordId, username)
+        };
+
+
+        context.CHHA_Quality_POC_Responses.AddRange(responses);
+        await context.SaveChangesAsync();
+
+        Console.WriteLine("Form submission successful");
+
+        NavigationManager.NavigateTo("/");
+
+    }
+}
