@@ -1,0 +1,96 @@
+﻿@page "/HHA_Chart_Reviews"
+@using Microsoft.EntityFrameworkCore
+@using CHHA_PlanOfCorrectinAudit.Models
+@inject IDbContextFactory<CHHA_PlanOfCorrectionAudit.Data.CHHA_PlanOfCorrectionAuditContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>HHA Chart Reviews</PageTitle>
+
+<h1>HHA Chart Reviews</h1>
+
+<p>
+    <a class="btn btn-primary" href="/HHA_Chart_Reviews/create">Create New Review</a>
+</p>
+
+@if (isLoading) {
+    <p><em>Loading...</em></p>
+} else if (records?.Any() != true) {
+    <p>No records found.</p>
+} else {
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patient MRN</th>
+                <th>Patient Name</th>
+                <th>Start of Care Date</th>
+                <th>Assigned Reviewer</th>
+                <th>Date of Review</th>
+                <th>Reviewer Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in records) {
+                <tr>
+                    <td>@record.Patient_MRN</td>
+                    <td>@record.Patient_Name</td>
+                    <td>@record.Start_of_Care_Date?.ToString("yyyy-MM-dd")</td>
+                    <td>@record.Assigned_Reviewer</td>
+                    <td>@record.DateOfReview</td>
+                    <td>@record.ReviewerNotes</td>
+                    <td>
+                        <a class="btn btn-sm btn-info" href="/details/@record.RecordId">View</a>
+                        <a class="btn btn-sm btn-warning" href="/edit/@record.RecordId">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private bool isLoading = true;
+
+    private class ChartReviewListItem {
+        public Guid RecordId { get; set; }
+        public string Patient_MRN { get; set; } = "";
+        public string Patient_Name { get; set; } = "";
+        public DateOnly? Start_of_Care_Date { get; set; }
+        public string Assigned_Reviewer { get; set; } = "";
+        public string? DateOfReview { get; set; }
+        public string? ReviewerNotes { get; set; }
+    }
+
+    private List<ChartReviewListItem> records = new();
+
+    protected override async Task OnInitializedAsync() {
+        isLoading = true;
+        try {
+            using var context = DbFactory.CreateDbContext();
+
+            var metadataList = await context.CHHA_Quality_POC_Metadata
+                .Where(m => m.Form == "HHA Chart Reviews")  // Filter by Form field
+                .OrderByDescending(m => m.Date_Assigned)
+                .ToListAsync();
+
+            var metadataIds = metadataList.Select(m => m.Id).ToList();
+
+            var responses = await context.CHHA_Quality_POC_Responses
+                .Where(r => metadataIds.Contains(r.MetadataId) &&
+                            (r.Question == "DateOfReview" || r.Question == "ReviewerNotes"))
+                .ToListAsync();
+
+            records = metadataList.Select(meta => new ChartReviewListItem {
+                    RecordId = meta.RecordId,
+                    Patient_MRN = meta.Patient_MRN,
+                    Patient_Name = meta.Patient_Name,
+                    Start_of_Care_Date = meta.Start_of_Care_Date,
+                    Assigned_Reviewer = meta.Assigned_Reviewer,
+                    DateOfReview = responses.FirstOrDefault(r => r.MetadataId == meta.Id && r.Question == "DateOfReview")?.Response,
+                    ReviewerNotes = responses.FirstOrDefault(r => r.MetadataId == meta.Id && r.Question == "ReviewerNotes")?.Response
+                }).ToList();
+        } finally {
+            isLoading = false;
+        }
+    }
+}

@@ -1,0 +1,299 @@
+﻿@page "/edit/{recordId:guid}"
+@using Microsoft.EntityFrameworkCore
+@using CHHA_PlanOfCorrectinAudit.Models
+@inject IDbContextFactory<CHHA_PlanOfCorrectionAudit.Data.CHHA_PlanOfCorrectionAuditContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<Details> Logger
+
+<PageTitle>Edit</PageTitle>
+
+
+@if (isLoading) {
+    <p><em>Loading...</em></p>
+} else if (metadata == null) {
+    <p class="text-danger">Record not found.</p>
+} else {
+
+    <h1>@metadata.Form</h1>
+
+    <EditForm Model="@metadata" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button class="btn btn-secondary" @onclick="GoBack">Back to List</button>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Patient Info
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <!-- Patient MRN -->
+                        <tr>
+                            <td class="label-column">Patient MRN</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="patientMRN" class="form-control" @bind-Value="metadata.Patient_MRN" />
+                                } else {
+                                    <p>@metadata.Patient_MRN</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Patient Name -->
+                        <tr>
+                            <td class="label-column">Patient Name</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="patientName" class="form-control" @bind-Value="metadata.Patient_Name" />
+                                } else {
+                                    <p>@metadata.Patient_Name</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Patient Status -->
+                        <tr>
+                            <td class="label-column">Patient Status</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="patientStatus" class="form-control" @bind-Value="metadata.Patient_Status" />
+                                } else {
+                                    <p>@metadata.Patient_Status</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Program -->
+                        <tr>
+                            <td class="label-column">Program</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="program" class="form-control" @bind-Value="metadata.Program" />
+                                } else {
+                                    <p>@metadata.Program</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Borough of Care -->
+                        <tr>
+                            <td class="label-column">Borough of Care</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="boroughOfCare" class="form-control" @bind-Value="metadata.Borough_of_Care" />
+                                } else {
+                                    <p>@metadata.Borough_of_Care</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Start of Care Date -->
+                        <tr>
+                            <td class="label-column">Start of Care Date</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputDate id="startOfCareDate" class="form-control" @bind-Value="metadata.Start_of_Care_Date" />
+                                } else {
+                                    <p>@metadata.Start_of_Care_Date?.ToString("yyyy-MM-dd")</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Financial Class -->
+                        <tr>
+                            <td class="label-column">Financial Class</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="financialClass" class="form-control" @bind-Value="metadata.Financial_Class" />
+                                } else {
+                                    <p>@metadata.Financial_Class</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Payer -->
+                        <tr>
+                            <td class="label-column">Payer</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="payer" class="form-control" @bind-Value="metadata.Payer" />
+                                } else {
+                                    <p>@metadata.Payer</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Category -->
+                        <tr>
+                            <td class="label-column">Category</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="category" class="form-control" @bind-Value="metadata.Category" />
+                                } else {
+                                    <p>@metadata.Category</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Assigned Reviewer -->
+                        <tr>
+                            <td class="label-column">Assigned Reviewer</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputText id="assignedReviewer" class="form-control" @bind-Value="metadata.Assigned_Reviewer" />
+                                } else {
+                                    <p>@metadata.Assigned_Reviewer</p>
+                                }
+                            </td>
+                        </tr>
+
+                        <!-- Date Assigned -->
+                        <tr>
+                            <td class="label-column">Date Assigned</td>
+                            <td>
+                                @if (IsUserEditable()) {
+                                    <InputDate id="dateAssigned" class="form-control" @bind-Value="metadata.Date_Assigned" />
+                                } else {
+                                    <p>@metadata.Date_Assigned?.ToString("yyyy-MM-dd")</p>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Review Responses
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        @foreach (var resp in responses)
+                        {
+                            <tr>
+                                <td class="label-column">@resp.Question</td>
+                                <td class="input-column">
+                                    <InputText id="@resp.Question" class="form-control" @bind-Value="resp.Response" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button class="btn btn-secondary" @onclick="GoBack">Back to List</button>
+        <button type="button" class="btn btn-danger" @onclick="DeleteRecord">Delete</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public Guid recordId { get; set; }
+
+    private bool isLoading = true;
+    private CHHA_Quality_POC_Metadata? metadata;
+    private List<CHHA_Quality_POC_Responses> responses = new();
+
+    protected override async Task OnInitializedAsync() {
+        isLoading = true;
+
+        try {
+            using var context = DbFactory.CreateDbContext();
+
+            // Find the metadata record by RecordId
+            metadata = await context.CHHA_Quality_POC_Metadata
+                .FirstOrDefaultAsync(m => m.RecordId == recordId);
+
+            if (metadata != null) {
+                // Load all associated responses for this metadata record
+                responses = await context.CHHA_Quality_POC_Responses
+                    .Where(r => r.RecordId == recordId)
+                    .OrderBy(r => r.Question)
+                    .ToListAsync();
+            }
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    private void GoBack() {
+        NavigationManager.NavigateTo("/HHA_Chart_Reviews");
+    }
+
+    private async Task HandleSubmit() {
+        isLoading = true;
+        try {
+            using var context = DbFactory.CreateDbContext();
+
+            // Update metadata in database
+            context.CHHA_Quality_POC_Metadata.Update(metadata);
+            await context.SaveChangesAsync();
+
+            // Update responses in database
+            foreach (var response in responses) {
+                context.CHHA_Quality_POC_Responses.Update(response);
+            }
+            await context.SaveChangesAsync();
+        } catch (Exception ex) {
+            Console.Error.WriteLine(ex.Message);
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    private bool IsUserEditable() {
+        // Get the current user's username
+        var username = HttpContextAccessor.HttpContext.User.Identity.Name;
+        var userRole = HttpContextAccessor.HttpContext.User.FindFirst("role")?.Value;
+
+        // Allow editing only for specific usernames (e.g., "admin", "manager")
+        return userRole == "admin" || username == "manager"; // Replace with your usernames
+    }
+
+    private async Task DeleteRecord() {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this record?");
+        if (!confirm) return;
+
+        isLoading = true;
+        try {
+            using var context = DbFactory.CreateDbContext();
+
+            // Delete responses first (if they exist)
+            var responseEntities = await context.CHHA_Quality_POC_Responses
+                .Where(r => r.RecordId == recordId)
+                .ToListAsync();
+
+            context.CHHA_Quality_POC_Responses.RemoveRange(responseEntities);
+
+            // Delete the metadata
+            var metadataEntity = await context.CHHA_Quality_POC_Metadata
+                .FirstOrDefaultAsync(m => m.RecordId == recordId);
+
+            if (metadataEntity != null) {
+                context.CHHA_Quality_POC_Metadata.Remove(metadataEntity);
+            }
+
+            await context.SaveChangesAsync();
+
+            // Navigate back to the list page
+            NavigationManager.NavigateTo("/HHA_Chart_Reviews");
+        } catch (Exception ex) {
+            Console.Error.WriteLine("Delete failed: " + ex.Message);
+            // Optionally show an error message to the user
+        } finally {
+            isLoading = false;
+        }
+    }
+}

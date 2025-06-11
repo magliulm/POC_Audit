@@ -1,0 +1,20 @@
+﻿# Ignore Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Ignore build output
+bin/
+obj/
+
+# VS Code settings
+.vscode/
+
+# Logs and temp files
+*.log
+*.tmp
+*.cache
+*.pdb
+
+# ASP.NET secrets
+secrets.json
