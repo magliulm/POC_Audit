@@ -8,12 +8,12 @@ namespace CHHA_PlanOfCorrectinAudit.ViewModel {
         public string Patient_Status { get; set; }
         public string Program { get; set; }
         public string Borough_of_Care { get; set; }
-        public DateOnly? Start_of_Care_Date { get; set; }
+        public DateOnly Start_of_Care_Date { get; set; }
         public string Financial_Class { get; set; }
         public string Payer { get; set; }
         public string Category { get; set; }
         public string Assigned_Reviewer { get; set; }
-        public DateOnly? Date_Assigned { get; set; }
+        public DateOnly Date_Assigned { get; set; }
         public string FormName { get; set; }
         public string Key { get; set; }
 

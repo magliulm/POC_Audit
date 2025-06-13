@@ -5,7 +5,7 @@
 namespace CHHA_PlanOfCorrectionAudit.Migrations
 {
     /// <inheritdoc />
-    public partial class lastupdatedbyandtime : Migration
+    public partial class Lastupdatedbyandtime : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

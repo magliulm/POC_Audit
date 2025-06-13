@@ -4,6 +4,7 @@ using CHHA_PlanOfCorrectionAudit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CHHA_PlanOfCorrectionAudit.Migrations
 {
     [DbContext(typeof(CHHA_PlanOfCorrectionAuditContext))]
-    partial class CHHA_PlanOfCorrectionAuditContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+    [Migration("20250603165442_MakeNullableFieldsOptional")]
+    partial class MakeNullableFieldsOptional {
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,77 +33,42 @@ namespace CHHA_PlanOfCorrectionAudit.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Assigned_Reviewer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Borough_of_Care")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly>("Date_Assigned")
+                    b.Property<DateOnly?>("Date_Assigned")
                         .HasColumnType("date");
 
                     b.Property<string>("Financial_Class")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Form")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCurrentVersion")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("OriginalRecordId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Patient_MRN")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Patient_Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Patient_Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Payer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Program")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RecordId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RecordStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("Start_of_Care_Date")
+                    b.Property<DateOnly?>("Start_of_Care_Date")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
@@ -117,12 +84,6 @@ namespace CHHA_PlanOfCorrectionAudit.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseId"));
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateOnly?>("Date_Assigned")
                         .HasColumnType("date");
 
@@ -130,23 +91,12 @@ namespace CHHA_PlanOfCorrectionAudit.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsCurrentVersion")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Key")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastUpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MetadataId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("OriginalRecordId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Patient_MRN")
                         .IsRequired()
@@ -156,14 +106,8 @@ namespace CHHA_PlanOfCorrectionAudit.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RecordId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RecordStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Response")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ResponseId");

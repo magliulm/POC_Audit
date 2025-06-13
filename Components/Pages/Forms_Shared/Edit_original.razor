@@ -161,7 +161,7 @@
                                 @if (IsUserEditable()) {
                                     <InputDate id="dateAssigned" class="form-control" @bind-Value="metadata.Date_Assigned" />
                                 } else {
-                                    <p>@metadata.Date_Assigned?.ToString("yyyy-MM-dd")</p>
+                                    <p>@metadata.Date_Assigned.ToString("yyyy-MM-dd")</p>
                                 }
                             </td>
                         </tr>
@@ -238,7 +238,7 @@
             using var context = DbFactory.CreateDbContext();
 
             // Update metadata in database
-            context.CHHA_Quality_POC_Metadata.Update(metadata);
+            context.CHHA_Quality_POC_Metadata.Update(metadata!);
             await context.SaveChangesAsync();
 
             // Update responses in database
@@ -255,8 +255,8 @@
 
     private bool IsUserEditable() {
         // Get the current user's username
-        var username = HttpContextAccessor.HttpContext.User.Identity.Name;
-        var userRole = HttpContextAccessor.HttpContext.User.FindFirst("role")?.Value;
+        var username = @HttpContextAccessor.HttpContext?.User?.Identity?.Name ?? "Unknown User";
+        var userRole = @HttpContextAccessor.HttpContext?.User?.FindFirst("role")?.Value ?? "Unknown User Role";
 
         // Allow editing only for specific usernames (e.g., "admin", "manager")
         return userRole == "admin" || username == "manager"; // Replace with your usernames

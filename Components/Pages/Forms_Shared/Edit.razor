@@ -20,12 +20,9 @@
 
     <h1>@metadata.Form</h1>
 
-    <EditForm Model="@metadata" OnValidSubmit="HandleSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button class="btn btn-secondary" @onclick="GoBack">Back to List</button>
+        <DataAnnotationsValidator />
 
         <div class="card mb-3">
             <div class="card-header">
@@ -34,137 +31,97 @@
             <div class="card-body">
                 <table class="table table-bordered">
                     <tbody>
-                        <!-- Patient MRN -->
-                        <tr>
-                            <td class="label-column">Patient MRN</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="patientMRN" class="form-control" @bind-Value="metadata.Patient_MRN" />
-                                } else {
-                                    <p>@metadata.Patient_MRN</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Patient Name -->
-                        <tr>
-                            <td class="label-column">Patient Name</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="patientName" class="form-control" @bind-Value="metadata.Patient_Name" />
-                                } else {
-                                    <p>@metadata.Patient_Name</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Patient Status -->
-                        <tr>
-                            <td class="label-column">Patient Status</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="patientStatus" class="form-control" @bind-Value="metadata.Patient_Status" />
-                                } else {
-                                    <p>@metadata.Patient_Status</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Program -->
-                        <tr>
-                            <td class="label-column">Program</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="program" class="form-control" @bind-Value="metadata.Program" />
-                                } else {
-                                    <p>@metadata.Program</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Borough of Care -->
-                        <tr>
-                            <td class="label-column">Borough of Care</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="boroughOfCare" class="form-control" @bind-Value="metadata.Borough_of_Care" />
-                                } else {
-                                    <p>@metadata.Borough_of_Care</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Start of Care Date -->
-                        <tr>
-                            <td class="label-column">Start of Care Date</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputDate id="startOfCareDate" class="form-control" @bind-Value="metadata.Start_of_Care_Date" />
-                                } else {
-                                    <p>@metadata.Start_of_Care_Date?.ToString("yyyy-MM-dd")</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Financial Class -->
-                        <tr>
-                            <td class="label-column">Financial Class</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="financialClass" class="form-control" @bind-Value="metadata.Financial_Class" />
-                                } else {
-                                    <p>@metadata.Financial_Class</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Payer -->
-                        <tr>
-                            <td class="label-column">Payer</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="payer" class="form-control" @bind-Value="metadata.Payer" />
-                                } else {
-                                    <p>@metadata.Payer</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Category -->
-                        <tr>
-                            <td class="label-column">Category</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="category" class="form-control" @bind-Value="metadata.Category" />
-                                } else {
-                                    <p>@metadata.Category</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Assigned Reviewer -->
-                        <tr>
-                            <td class="label-column">Assigned Reviewer</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputText id="assignedReviewer" class="form-control" @bind-Value="metadata.Assigned_Reviewer" />
-                                } else {
-                                    <p>@metadata.Assigned_Reviewer</p>
-                                }
-                            </td>
-                        </tr>
-
-                        <!-- Date Assigned -->
-                        <tr>
-                            <td class="label-column">Date Assigned</td>
-                            <td>
-                                @if (IsUserEditable()) {
-                                    <InputDate id="dateAssigned" class="form-control" @bind-Value="metadata.Date_Assigned" />
-                                } else {
-                                    <p>@metadata.Date_Assigned?.ToString("yyyy-MM-dd")</p>
-                                }
-                            </td>
-                        </tr>
+                        @if (IsUserEditable()) {
+                            <tr>
+                                <td class="label-column">Patient MRN</td>
+                                <td><InputText id="patientMRN" class="form-control" @bind-Value="metadata.Patient_MRN" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Patient Name</td>
+                                <td><InputText id="patientName" class="form-control" @bind-Value="metadata.Patient_Name" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Patient Status</td>
+                                <td><InputText id="patientStatus" class="form-control" @bind-Value="metadata.Patient_Status" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Program</td>
+                                <td><InputText id="program" class="form-control" @bind-Value="metadata.Program" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Borough of Care</td>
+                                <td><InputText id="boroughOfCare" class="form-control" @bind-Value="metadata.Borough_of_Care" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Start of Care Date</td>
+                                <td><InputDate id="startOfCareDate" class="form-control" @bind-Value="metadata.Start_of_Care_Date" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Financial Class</td>
+                                <td><InputText id="financialClass" class="form-control" @bind-Value="metadata.Financial_Class" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Payer</td>
+                                <td><InputText id="payer" class="form-control" @bind-Value="metadata.Payer" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Category</td>
+                                <td><InputText id="category" class="form-control" @bind-Value="metadata.Category" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Assigned Reviewer</td>
+                                <td><InputText id="assignedReviewer" class="form-control" @bind-Value="metadata.Assigned_Reviewer" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Date Assigned</td>
+                                <td><InputDate id="dateAssigned" class="form-control" @bind-Value="metadata.Date_Assigned" /></td>
+                            </tr>
+                        } else {
+                            <tr>
+                                <td class="label-column">Patient MRN</td>
+                                <td><p>@metadata.Patient_MRN</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Patient Name</td>
+                                <td><p>@metadata.Patient_Name</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Patient Status</td>
+                                <td><p>@metadata.Patient_Status</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Program</td>
+                                <td><p>@metadata.Program</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Borough of Care</td>
+                                <td><p>@metadata.Borough_of_Care</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Start of Care Date</td>
+                                <td><p>@metadata.Start_of_Care_Date?.ToString("yyyy-MM-dd")</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Financial Class</td>
+                                <td><p>@metadata.Financial_Class</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Payer</td>
+                                <td><p>@metadata.Payer</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Category</td>
+                                <td><p>@metadata.Category</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Assigned Reviewer</td>
+                                <td><p>@metadata.Assigned_Reviewer</p></td>
+                            </tr>
+                            <tr>
+                                <td class="label-column">Date Assigned</td>
+                                <td><p>@metadata.Date_Assigned.ToString("yyyy-MM-dd")</p></td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -178,10 +135,18 @@
                 <table class="table table-bordered">
                     <tbody>
                         @foreach (var resp in responses) {
+                            var inputType = GetInputType(resp.Question);
+
                             <tr>
                                 <td class="label-column">@resp.Question</td>
                                 <td class="input-column">
-                                    <InputText id="@resp.Question" class="form-control" @bind-Value="resp.Response" />
+                                    @if (inputType == "date") {
+                                        <InputDate @bind-Value="resp.DateResponse" class="form-control" />
+                                    } else if (inputType == "number") {
+                                        <InputNumber @bind-Value="resp.IntResponse" class="form-control" />
+                                    } else {
+                                        <InputText @bind-Value="resp.Response" class="form-control" />
+                                    }
                                 </td>
                             </tr>
                         }
@@ -190,12 +155,15 @@
             </div>
         </div>
 
+        <ValidationSummary />
 
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" @onclick="HandleSaveDraft">Save as Draft</button>
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
         <button class="btn btn-secondary" @onclick="GoBack">Back to List</button>
         <button type="button" class="btn btn-danger" @onclick="DeleteRecord">Delete</button>
     </EditForm>
+
 }
 
 @code {
@@ -206,61 +174,134 @@
     private CHHA_Quality_POC_Metadata? metadata;
     private List<CHHA_Quality_POC_Responses> responses = new();
 
+    private EditContext? editContext;
+    private ValidationMessageStore? messageStore;
+
     protected override async Task OnInitializedAsync() {
         isLoading = true;
 
         try {
             using var context = DbFactory.CreateDbContext();
 
-            // Find the metadata record by RecordId
             metadata = await context.CHHA_Quality_POC_Metadata
                 .FirstOrDefaultAsync(m => m.RecordId == recordId);
 
             if (metadata != null) {
-                // Load all associated responses for this metadata record
                 responses = await context.CHHA_Quality_POC_Responses
                     .Where(r => r.RecordId == recordId)
                     .OrderBy(r => r.Question)
                     .ToListAsync();
+
+                editContext = new EditContext(metadata);
+                messageStore = new ValidationMessageStore(editContext);
             }
         } finally {
             isLoading = false;
         }
+    }
+
+    private string GetInputType(string? question) {
+        if (string.IsNullOrWhiteSpace(question))
+            return "text";
+
+        var lower = question.ToLower();
+
+        if (lower.Contains("date"))
+            return "date";
+        if (lower.Contains("number") || lower.Contains("#") || lower.Contains("total") || lower.Contains("count"))
+            return "number";
+
+        return "text";
+    }
+
+    private bool IsUserEditable() {
+        var username = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+        var userRole = HttpContextAccessor.HttpContext?.User.FindFirst("role")?.Value;
+        return userRole == "admin" || username == "manager";
     }
 
     private void GoBack() {
         NavigationManager.NavigateTo("/HHA_Chart_Reviews");
     }
 
-    private async Task HandleSubmit() {
-        isLoading = true;
+    private bool ValidateDraft() {
+        bool isValid = true;
+
+        void AddError(string field, string message) {
+            isValid = false;
+            messageStore!.Add(editContext!.Field(field), message);
+        }
+
+        if (string.IsNullOrWhiteSpace(metadata!.Patient_MRN))
+            AddError(nameof(metadata.Patient_MRN), "Patient MRN is required.");
+
+        if (string.IsNullOrWhiteSpace(metadata.Form))
+            AddError(nameof(metadata.Form), "Form is required.");
+
+        return isValid;
+    }
+
+    private bool ValidateResponses() {
+        bool isValid = true;
+
+        messageStore!.Clear();
+
+        for (int i = 0; i < responses.Count; i++) {
+            var resp = responses[i];
+            var inputType = GetInputType(resp.Question);
+
+            if (inputType == "date") {
+                if (!resp.DateResponse.HasValue) {
+                    var field = new FieldIdentifier(resp, nameof(resp.DateResponse));
+                    messageStore.Add(field, $"'{resp.Question}' is required.");
+                    isValid = false;
+                }
+            } else if (inputType == "number") {
+                if (!resp.IntResponse.HasValue) {
+                    var field = new FieldIdentifier(resp, nameof(resp.IntResponse));
+                    messageStore.Add(field, $"'{resp.Question}' is required.");
+                    isValid = false;
+                }
+            } else {
+                if (string.IsNullOrWhiteSpace(resp.Response)) {
+                    var field = new FieldIdentifier(resp, nameof(resp.Response));
+                    messageStore.Add(field, $"'{resp.Question}' is required.");
+                    isValid = false;
+                }
+            }
+        }
+
+        return isValid;
+    }
+
+
+    private string GenerateKey(CHHA_Quality_POC_Metadata meta) {
+        return $"{meta.Patient_MRN}_{meta.Form}_{meta.Date_Assigned.ToString("yyyy-MM-dd")}";
+    }
+
+    private async Task SaveChangesAsync() {
         try {
             using var context = DbFactory.CreateDbContext();
 
-            // Update metadata in database
+            // Update LastUpdated on metadata
+            metadata!.LastUpdated = DateTime.UtcNow;
+
             context.CHHA_Quality_POC_Metadata.Update(metadata);
+
+            // Update LastUpdated on each response
+            foreach (var r in responses) {
+                r.LastUpdated = DateTime.UtcNow;
+                context.CHHA_Quality_POC_Responses.Update(r);
+            }
+
             await context.SaveChangesAsync();
 
-            // Update responses in database
-            foreach (var response in responses) {
-                context.CHHA_Quality_POC_Responses.Update(response);
-            }
-            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/HHA_Chart_Reviews");
         } catch (Exception ex) {
-            Console.Error.WriteLine(ex.Message);
-        } finally {
-            isLoading = false;
+            Console.Error.WriteLine("Save failed: " + ex.Message);
         }
     }
 
-    private bool IsUserEditable() {
-        // Get the current user's username
-        var username = HttpContextAccessor.HttpContext.User.Identity.Name;
-        var userRole = HttpContextAccessor.HttpContext.User.FindFirst("role")?.Value;
-
-        // Allow editing only for specific usernames (e.g., "admin", "manager")
-        return userRole == "admin" || username == "manager"; // Replace with your usernames
-    }
 
     private async Task DeleteRecord() {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this record?");
@@ -270,14 +311,12 @@
         try {
             using var context = DbFactory.CreateDbContext();
 
-            // Delete responses first (if they exist)
             var responseEntities = await context.CHHA_Quality_POC_Responses
                 .Where(r => r.RecordId == recordId)
                 .ToListAsync();
 
             context.CHHA_Quality_POC_Responses.RemoveRange(responseEntities);
 
-            // Delete the metadata
             var metadataEntity = await context.CHHA_Quality_POC_Metadata
                 .FirstOrDefaultAsync(m => m.RecordId == recordId);
 
@@ -286,14 +325,47 @@
             }
 
             await context.SaveChangesAsync();
-
-            // Navigate back to the list page
             NavigationManager.NavigateTo("/HHA_Chart_Reviews");
         } catch (Exception ex) {
             Console.Error.WriteLine("Delete failed: " + ex.Message);
-            // Optionally show an error message to the user
         } finally {
             isLoading = false;
         }
+    }
+
+    private async Task HandleValidSubmit() {
+        Console.WriteLine("\n\nsubmit\n\n");
+
+        if (editContext == null || messageStore == null || metadata == null)
+            return;
+
+        messageStore.Clear();
+
+        bool responsesValid = ValidateResponses();
+        editContext.NotifyValidationStateChanged();
+
+        if (!responsesValid)
+            return;
+
+        metadata.RecordStatus = "Submitted";
+        metadata.Key = GenerateKey(metadata);
+        await SaveChangesAsync();
+    }
+
+    private async Task HandleSaveDraft() {
+        Console.WriteLine("\n\nDraft\n\n");
+        if (editContext == null || messageStore == null || metadata == null)
+            return;
+
+        metadata.RecordStatus = "Draft";
+        messageStore.Clear();
+
+        bool isValid = ValidateDraft();
+        editContext.NotifyValidationStateChanged();
+
+        if (!isValid) return;
+
+        metadata.Key = GenerateKey(metadata);
+        await SaveChangesAsync();
     }
 }

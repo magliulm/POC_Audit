@@ -38,7 +38,7 @@ else
             <p><strong>Payer:</strong> @metadata.Payer</p>
             <p><strong>Category:</strong> @metadata.Category</p>
             <p><strong>Assigned Reviewer:</strong> @metadata.Assigned_Reviewer</p>
-            <p><strong>Date Assigned:</strong> @metadata.Date_Assigned?.ToString("yyyy-MM-dd")</p>
+            <p><strong>Date Assigned:</strong> @metadata.Date_Assigned.ToString("yyyy-MM-dd")</p>
         </div>
     </div>
 
@@ -124,11 +124,8 @@ else
     }
 
 
-    private string testMessage = "Button not clicked yet";
-
     private void LogToServerConsole() {
         Console.WriteLine("\n\n\n Button Clicked\n\n\n");
-        testMessage = "Button was clicked!";
         NavigationManager.NavigateTo("/HHA_Chart_Reviews");
 
     }

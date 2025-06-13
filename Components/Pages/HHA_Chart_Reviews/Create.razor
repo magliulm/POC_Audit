@@ -1,223 +1,360 @@
-﻿@page "/HHA_Chart_Reviews/create_original"
+﻿@page "/HHA_Chart_Reviews/create"
+@using CHHA_PlanOfCorrectinAudit.ViewModel
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using CHHA_PlanOfCorrectinAudit.Models
-@using CHHA_PlanOfCorrectinAudit.ViewModel
 @inject IDbContextFactory<CHHA_PlanOfCorrectionAudit.Data.CHHA_PlanOfCorrectionAuditContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
 
-<PageTitle>Create</PageTitle>
+<h3>HHA Chart Review Form</h3>
 
-<h2>CHHA Quality POC form</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="formModel" OnValidSubmit="AddFormData" FormName="create" Enhance>
+<EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    @* <ValidationSummary /> *@
 
-            <!-- Form Fields -->
-
-            <div class="mb-3">
-                <label for="Patient_MRN" class="form-label">Patient MRN:</label>
-                <InputText id="Patient_MRN" @bind-Value="formModel.Patient_MRN" class="form-control" />
-                <ValidationMessage For="() => formModel.Patient_MRN" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="patient_Name" class="form-label">Patient Name:</label>
-                <InputText id="patient_Name" @bind-Value="formModel.Patient_Name" class="form-control" />
-                <ValidationMessage For="() => formModel.Patient_Name" class="text-danger" />
-            </div>
-           
-            <div class="mb-3">
-                <label for="Patient_Status" class="form-label">"Patient Status:</label>
-                <InputText id="Patient_Status" @bind-Value="formModel.Patient_Status" class="form-control" />
-                <ValidationMessage For="() => formModel.Patient_Status" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Program" class="form-label">Program:</label>
-                <InputText id="Program" @bind-Value="formModel.Program" class="form-control" />
-                <ValidationMessage For="() => formModel.Program" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Borough_of_Care" class="form-label">Borough of Care:</label>
-                <InputText id="Borough_of_Care" @bind-Value="formModel.Borough_of_Care" class="form-control" />
-                <ValidationMessage For="() => formModel.Borough_of_Care" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Start_of_Care_Date" class="form-label">Start of Care Date:</label>
-                <InputDate @bind-Value="formModel.Start_of_Care_Date" id="Start_of_Care_Date" class="form-control" />
-                <ValidationMessage For="() => formModel.Start_of_Care_Date" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Financial_Class" class="form-label">Financial Class:</label>
-                <InputText id="Financial_Class" @bind-Value="formModel.Financial_Class" class="form-control" />
-                <ValidationMessage For="() => formModel.Financial_Class" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Payer" class="form-label">Payer:</label>
-                <InputText id="Payer" @bind-Value="formModel.Payer" class="form-control" />
-                <ValidationMessage For="() => formModel.Payer" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Category" class="form-label">Category:</label>
-                <InputText id="Category" @bind-Value="formModel.Category" class="form-control" />
-                <ValidationMessage For="() => formModel.Category" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Assigned_Reviewer" class="form-label">Assigned Reviewer:</label>
-                <InputText id="Assigned_Reviewer" @bind-Value="formModel.Assigned_Reviewer" class="form-control" />
-                <ValidationMessage For="() => formModel.Assigned_Reviewer" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label for="Date_Assigned" class="form-label">Date Assigned:</label>
-                <InputDate @bind-Value="formModel.Date_Assigned" id="Date_Assigned" class="form-control" />
-                <ValidationMessage For="() => formModel.Date_Assigned" class="text-danger" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Date of Review:</label>
-                <InputDate @bind-Value="formModel.DateOfReview" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Date of Review (Completion):</label>
-                <InputDate @bind-Value="formModel.DateOfReviewCompletion" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Episode Discharge Date:</label>
-                <InputDate @bind-Value="formModel.EpisodeDischargeDate" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Is the frequency/ duration of HHA service present?</label>
-                <InputText @bind-Value="formModel.FrequencyDurationPresent" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Are the duties/ interventions checked off on the HHA POC?</label>
-                <InputText @bind-Value="formModel.DutiesCheckedOnPOC" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Do the duties/ interventions have a frequency?</label>
-                <InputText @bind-Value="formModel.DutiesHaveFrequency" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Does the diet on the HHA POC reflect the diet/ restrictions on the Start of Care (485)?</label>
-                <InputText @bind-Value="formModel.DietMatch485" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Is the HHA POC signed by the nurse?</label>
-                <InputText @bind-Value="formModel.POCSignedByNurse" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Do the Duty Sheets Reflect Individualized Tasks Performed as Ordered?</label>
-                <InputText @bind-Value="formModel.IndividualizedTasks" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Is there documentation of HHA supervision every 14 days?</label>
-                <InputText @bind-Value="formModel.SupervisionEvery14Days" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Reviewer Notes:</label>
-                <InputTextArea @bind-Value="formModel.ReviewerNotes" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Chart Review Outcome:</label>
-                <InputText @bind-Value="formModel.ChartReviewOutcome" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Involved Staff (First Initial, Last Name):</label>
-                <InputText @bind-Value="formModel.InvolvedStaff" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Column3:</label>
-                <InputText @bind-Value="formModel.Column3" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Overseeing Manager (of Care Episode):</label>
-                <InputText @bind-Value="formModel.OverseeingManager" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Date of Escalation to Responsible Manager (Inform Manager of Gap):</label>
-                <InputDate @bind-Value="formModel.DateEscalated" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Additional Notes:</label>
-                <InputTextArea @bind-Value="formModel.AdditionalNotes" class="form-control" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Corrected Staff Name:</label>
-                <InputText @bind-Value="formModel.CorrectedStaffName" class="form-control" />
-            </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
+    <div class="mb-3">
+        <label for="Patient_MRN" class="form-label">Patient MRN:</label>
+        <InputNumber id="Patient_MRN" @bind-Value="formModel.Patient_MRN" class="form-control" />
+        <ValidationMessage For="() => formModel.Patient_MRN" class="text-danger" />
     </div>
-</div>
 
-<div>
-    <a href="/metadata">Back to List</a>
-</div>
+    <div class="mb-3">
+        <label for="patient_Name" class="form-label">Patient Name:</label>
+        <InputText id="patient_Name" @bind-Value="formModel.Patient_Name" class="form-control" />
+        <ValidationMessage For="() => formModel.Patient_Name" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Patient_Status" class="form-label">Patient Status:</label>
+        <InputSelect id="Patient_Status" @bind-Value="formModel.Patient_Status" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.PatientStatusOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => formModel.Patient_Status" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Program" class="form-label">Program:</label>
+        <InputSelect id="Program" @bind-Value="formModel.Program" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.ProgramOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => formModel.Program" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Borough_of_Care" class="form-label">Borough of Care:</label>
+        <InputSelect id="Borough_of_Care" @bind-Value="formModel.Borough_of_Care" class="form-control">
+            <option value="">-- Select a Borough --</option>
+            @foreach (var option in FormInputModel_HHA.BoroughOfCareOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => formModel.Borough_of_Care" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Start_of_Care_Date" class="form-label">Start of Care Date:</label>
+        <InputDate @bind-Value="formModel.Start_of_Care_Date" id="Start_of_Care_Date" class="form-control" />
+        <ValidationMessage For="() => formModel.Start_of_Care_Date" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Financial_Class" class="form-label">Financial Class:</label>
+        <InputSelect id="Financial_Class" @bind-Value="formModel.Financial_Class" class="form-control">
+            <option value="">-- Select Financial Class --</option>
+            @foreach (var option in FormInputModel_HHA.FinancialClassOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => formModel.Financial_Class" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Payer" class="form-label">Payer:</label>
+        <InputSelect id="Payer" @bind-Value="formModel.Payer" class="form-control">
+            <option value="">-- Select a payer --</option>
+            @foreach (var option in FormInputModel_HHA.PayerOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => formModel.Payer" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Category" class="form-label">Category:</label>
+        <InputText id="Category" @bind-Value="formModel.Category" class="form-control" />
+        <ValidationMessage For="() => formModel.Category" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Assigned_Reviewer" class="form-label">Assigned Reviewer:</label>
+        <InputText id="Assigned_Reviewer" @bind-Value="formModel.Assigned_Reviewer" class="form-control" />
+        <ValidationMessage For="() => formModel.Assigned_Reviewer" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Date_Assigned" class="form-label">Date Assigned:</label>
+        <InputDate @bind-Value="formModel.Date_Assigned" id="Date_Assigned" class="form-control" />
+        <ValidationMessage For="() => formModel.Date_Assigned" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date of Review:</label>
+        <InputDate @bind-Value="formModel.DateOfReview" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date of Review (Completion):</label>
+        <InputDate @bind-Value="formModel.DateOfReviewCompletion" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Episode Discharge Date:</label>
+        <InputDate @bind-Value="formModel.EpisodeDischargeDate" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Is the frequency/ duration of HHA service present?</label>
+        <InputSelect @bind-Value="formModel.FrequencyDurationPresent" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Are the duties/ interventions checked off on the HHA POC?</label>
+        <InputSelect @bind-Value="formModel.DutiesCheckedOnPOC" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Do the duties/ interventions have a frequency?</label>
+        <InputSelect @bind-Value="formModel.DutiesHaveFrequency" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Does the diet on the HHA POC reflect the diet/ restrictions on the Start of Care (485)?</label>
+        <InputSelect @bind-Value="formModel.DietMatch485" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Is the HHA POC signed by the nurse?</label>
+        <InputSelect @bind-Value="formModel.POCSignedByNurse" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Do the Duty Sheets Reflect Individualized Tasks Performed as Ordered?</label>
+        <InputSelect @bind-Value="formModel.IndividualizedTasks" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Is there documentation of HHA supervision every 14 days?</label>
+        <InputSelect @bind-Value="formModel.SupervisionEvery14Days" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.YesNoOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Reviewer Notes:</label>
+        <InputTextArea @bind-Value="formModel.ReviewerNotes" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Chart Review Outcome:</label>
+        <InputSelect @bind-Value="formModel.ChartReviewOutcome" class="form-control">
+            <option value="">-- Select an outcome --</option>
+            @foreach (var option in FormInputModel_HHA.ChartReviewOutcomeOptions) {
+                <option value="@option">@option</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Involved Staff (First Initial, Last Name):</label>
+        <InputText @bind-Value="formModel.InvolvedStaff" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Column3:</label>
+        <InputText @bind-Value="formModel.Column3" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Overseeing Manager (of Care Episode):</label>
+        <InputText @bind-Value="formModel.OverseeingManager" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date of Escalation to Responsible Manager (Inform Manager of Gap):</label>
+        <InputDate @bind-Value="formModel.DateEscalated" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Additional Notes:</label>
+        <InputTextArea @bind-Value="formModel.AdditionalNotes" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Corrected Staff Name:</label>
+        <InputText @bind-Value="formModel.CorrectedStaffName" class="form-control" />
+    </div>
+
+    <ValidationSummary />
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary me-2">Option1 (Submit w/ validation)</button>
+        <button type="button" class="btn btn-secondary" @onclick="HandleSaveDraft">Option2 (Save as Draft)</button>
+    </div>
+    
+</EditForm>
 
 @code {
     [SupplyParameterFromForm]
     private FormInputModel_HHA formModel { get; set; } = new();
+    private ValidationMessageStore? messageStore;
+
+    private EditContext? editContext;
 
     protected override void OnInitialized() {
+        editContext = new EditContext(formModel);
+        messageStore = new ValidationMessageStore(editContext);
+
         Console.WriteLine("✅ THIS IS A TEST Console.WriteLine OUTPUT for form");
+
         formModel.FormName = "HHA Chart Reviews";
+        formModel.Category ??= "HHC Chart Reviews";
 
-        // Key can be calculated or left empty as you use it in your logic
-        formModel.Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}";
+        formModel.RecordStatus = "Draft"; // or something default
+        formModel.Key = "TEMP"; // Temporary until it's updated on submit
     }
 
-    private CHHA_Quality_POC_Responses CreateResponse(string question, string? response, CHHA_Quality_POC_Metadata metadata, Guid recordId, string username) {
-        return new CHHA_Quality_POC_Responses {
-                Patient_MRN = formModel.Patient_MRN,
-                Date_Assigned = formModel.Date_Assigned,
-                Question = question,
-                Response = response,
-                MetadataId = metadata.Id,
-                Form = formModel.FormName,
-                Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}",
-                CreatedBy = username,
-                CreatedDate = DateTime.UtcNow,
-                LastUpdatedBy = username,
-                LastUpdated = DateTime.UtcNow,
-                OriginalRecordId = recordId,
-                RecordId = recordId,
-                IsCurrentVersion = true
-            };
+    private async Task HandleValidSubmit() {
+        formModel.Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}";
+        formModel.RecordStatus = "Submitted";
+        await AddFormData();
     }
 
-    // private void AddFormData() {
+    private void ResetEditContext() {
+        editContext = new EditContext(formModel);
+        messageStore = new ValidationMessageStore(editContext);
+        StateHasChanged(); // force UI to re-render with new context
+    }
+
+    private async Task HandleSaveDraft() {
+        Console.WriteLine("\n\n\nSaving as draft (partial validation)\n\n\n");
+
+        formModel.RecordStatus = "Draft";
+
+        formModel.Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}";
+
+        ResetEditContext();
+
+        if (!ValidateDraft()) {
+            editContext!.NotifyValidationStateChanged();
+            return;
+        }
+
+        await AddFormData();
+    }
+
+
+
+    private bool ValidateDraft() {
+        bool isValid = true;
+        messageStore!.Clear();
+
+        void CheckRequired<T>(T value, string fieldName, string errorMessage) {
+            if (value == null || (value is string s && string.IsNullOrWhiteSpace(s))) {
+                isValid = false;
+                messageStore!.Add(editContext!.Field(fieldName), errorMessage);
+            }
+        }
+
+        // Required fields for Draft
+        CheckRequired(formModel.Patient_MRN, nameof(formModel.Patient_MRN), "Patient MRN is required");
+        CheckRequired(formModel.Patient_Name, nameof(formModel.Patient_Name), "Patient Name is required");
+        CheckRequired(formModel.Patient_Status, nameof(formModel.Patient_Status), "Patient Status is required");
+        CheckRequired(formModel.Program, nameof(formModel.Program), "Program is required");
+        CheckRequired(formModel.Borough_of_Care, nameof(formModel.Borough_of_Care), "Borough of Care is required");
+        CheckRequired(formModel.Start_of_Care_Date, nameof(formModel.Start_of_Care_Date), "Start of Care Date is required");
+        CheckRequired(formModel.Financial_Class, nameof(formModel.Financial_Class), "Financial Class is required");
+        CheckRequired(formModel.Payer, nameof(formModel.Payer), "Payer is required");
+        CheckRequired(formModel.Category, nameof(formModel.Category), "Category is required");
+        CheckRequired(formModel.Assigned_Reviewer, nameof(formModel.Assigned_Reviewer), "Assigned Reviewer is required");
+        CheckRequired(formModel.Date_Assigned, nameof(formModel.Date_Assigned), "Date Assigned is required");
+        CheckRequired(formModel.FormName, nameof(formModel.FormName), "Form Name is required");
+        CheckRequired(formModel.Key, nameof(formModel.Key), "Key is required");
+
+        return isValid;
+    }
+
+
+
+    private CHHA_Quality_POC_Responses CreateResponse(string question, string? response, CHHA_Quality_POC_Metadata metadata, Guid recordId, string username)
+{
+        if (string.IsNullOrWhiteSpace(formModel.Patient_MRN.ToString()) ||
+        string.IsNullOrWhiteSpace(formModel.FormName) ||
+        string.IsNullOrWhiteSpace(formModel.RecordStatus))
+    {
+        throw new InvalidOperationException("Cannot create response: one or more required fields (Patient_MRN, FormName, RecordStatus) are missing.");
+    }
+
+    return new CHHA_Quality_POC_Responses {
+        Patient_MRN = formModel.Patient_MRN.ToString()!,
+        Date_Assigned = formModel.Date_Assigned,
+        Question = question,
+        Response = response,
+        MetadataId = metadata.Id,
+        Form = formModel.FormName,
+        Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned:yyyy-MM-dd}",
+        CreatedBy = username,
+        CreatedDate = DateTime.UtcNow,
+        LastUpdatedBy = username,
+        LastUpdated = DateTime.UtcNow,
+        OriginalRecordId = recordId,
+        RecordId = recordId,
+        IsCurrentVersion = true,
+        RecordStatus = formModel.RecordStatus
+    };
+}
+
+
     private async Task AddFormData() {
-
-        Console.WriteLine("Form submission started");
-
-        // Log form data to verify (whether valid or not)
+        Console.WriteLine("\n\n\n📥 Starting form save...\n\n\n");
 
         var username = HttpContextAccessor.HttpContext?.User?.Identity?.Name ?? "UnknownUser";
         var newRecordId = Guid.NewGuid();
@@ -225,25 +362,25 @@
         using var context = DbFactory.CreateDbContext();
 
         var metadata = await context.CHHA_Quality_POC_Metadata
-            .FirstOrDefaultAsync(m => m.Patient_MRN == formModel.Patient_MRN);
+            .FirstOrDefaultAsync(m => m.Patient_MRN == formModel.Patient_MRN.ToString());
 
         if (metadata == null) {
             metadata = new CHHA_Quality_POC_Metadata {
-                    Patient_MRN = formModel.Patient_MRN,
-                    Patient_Name = formModel.Patient_Name,
-                    Patient_Status = formModel.Patient_Status,
-                    Program = formModel.Program,
-                    Borough_of_Care = formModel.Borough_of_Care,
+                    Patient_MRN = formModel.Patient_MRN.ToString()!,
+                    Patient_Name = formModel.Patient_Name!,
+                    Patient_Status = formModel.Patient_Status!,
+                    Program = formModel.Program!,
+                    Borough_of_Care = formModel.Borough_of_Care!,
                     Start_of_Care_Date = formModel.Start_of_Care_Date,
-                    Financial_Class = formModel.Financial_Class,
-                    Payer = formModel.Payer,
-                    Category = formModel.Category,
-                    Assigned_Reviewer = formModel.Assigned_Reviewer,
-                    Date_Assigned = formModel.Date_Assigned,
-                    Form = formModel.FormName,
-                    Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}",
+                    Financial_Class = formModel.Financial_Class!,
+                    Payer = formModel.Payer!,
+                    Category = formModel.Category!,
+                    Assigned_Reviewer = formModel.Assigned_Reviewer!,
+                    Date_Assigned = formModel.Date_Assigned!.Value,
+                    Form = formModel.FormName!,
+                    RecordStatus = formModel.RecordStatus!,
+                    Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}",
 
-                    // Audit fields here:
                     CreatedBy = username,
                     CreatedDate = DateTime.UtcNow,
                     LastUpdatedBy = username,
@@ -251,40 +388,38 @@
                     OriginalRecordId = newRecordId,
                     RecordId = newRecordId,
                     IsCurrentVersion = true
-
                 };
 
             context.CHHA_Quality_POC_Metadata.Add(metadata);
             await context.SaveChangesAsync();
         }
 
-        var responses = new List<CHHA_Quality_POC_Responses>{
-        CreateResponse("DateOfReview", formModel.DateOfReview?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
-        CreateResponse("DateOfReviewCompletion", formModel.DateOfReviewCompletion?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
-        CreateResponse("EpisodeDischargeDate", formModel.EpisodeDischargeDate?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
-        CreateResponse("FrequencyDurationPresent", formModel.FrequencyDurationPresent, metadata, newRecordId, username),
-        CreateResponse("DutiesCheckedOnPOC", formModel.DutiesCheckedOnPOC, metadata, newRecordId, username),
-        CreateResponse("DutiesHaveFrequency", formModel.DutiesHaveFrequency, metadata, newRecordId, username),
-        CreateResponse("DietMatch485", formModel.DietMatch485, metadata, newRecordId, username),
-        CreateResponse("POCSignedByNurse", formModel.POCSignedByNurse, metadata, newRecordId, username),
-        CreateResponse("IndividualizedTasks", formModel.IndividualizedTasks, metadata, newRecordId, username),
-        CreateResponse("SupervisionEvery14Days", formModel.SupervisionEvery14Days, metadata, newRecordId, username),
-        CreateResponse("ReviewerNotes", formModel.ReviewerNotes, metadata, newRecordId, username),
-        CreateResponse("ChartReviewOutcome", formModel.ChartReviewOutcome, metadata, newRecordId, username),
-        CreateResponse("InvolvedStaff", formModel.InvolvedStaff, metadata, newRecordId, username),
-        CreateResponse("Column3", formModel.Column3, metadata, newRecordId, username),
-        CreateResponse("OverseeingManager", formModel.OverseeingManager, metadata, newRecordId, username),
-        CreateResponse("DateEscalated", formModel.DateEscalated?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
-        CreateResponse("AdditionalNotes", formModel.AdditionalNotes, metadata, newRecordId, username),
-        CreateResponse("CorrectedStaffName", formModel.CorrectedStaffName, metadata, newRecordId, username)
+        var responses = new List<CHHA_Quality_POC_Responses> {
+            CreateResponse("DateOfReview", formModel.DateOfReview?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("DateOfReviewCompletion", formModel.DateOfReviewCompletion?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("EpisodeDischargeDate", formModel.EpisodeDischargeDate?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("FrequencyDurationPresent", formModel.FrequencyDurationPresent, metadata, newRecordId, username),
+            CreateResponse("DutiesCheckedOnPOC", formModel.DutiesCheckedOnPOC, metadata, newRecordId, username),
+            CreateResponse("DutiesHaveFrequency", formModel.DutiesHaveFrequency, metadata, newRecordId, username),
+            CreateResponse("DietMatch485", formModel.DietMatch485, metadata, newRecordId, username),
+            CreateResponse("POCSignedByNurse", formModel.POCSignedByNurse, metadata, newRecordId, username),
+            CreateResponse("IndividualizedTasks", formModel.IndividualizedTasks, metadata, newRecordId, username),
+            CreateResponse("SupervisionEvery14Days", formModel.SupervisionEvery14Days, metadata, newRecordId, username),
+            CreateResponse("ReviewerNotes", formModel.ReviewerNotes, metadata, newRecordId, username),
+            CreateResponse("ChartReviewOutcome", formModel.ChartReviewOutcome, metadata, newRecordId, username),
+            CreateResponse("InvolvedStaff", formModel.InvolvedStaff, metadata, newRecordId, username),
+            CreateResponse("Column3", formModel.Column3, metadata, newRecordId, username),
+            CreateResponse("OverseeingManager", formModel.OverseeingManager, metadata, newRecordId, username),
+            CreateResponse("DateEscalated", formModel.DateEscalated?.ToString("yyyy-MM-dd"), metadata, newRecordId, username),
+            CreateResponse("AdditionalNotes", formModel.AdditionalNotes, metadata, newRecordId, username),
+            CreateResponse("CorrectedStaffName", formModel.CorrectedStaffName, metadata, newRecordId, username)
         };
 
         context.CHHA_Quality_POC_Responses.AddRange(responses);
         await context.SaveChangesAsync();
 
-        Console.WriteLine("Form submission successful");
+        Console.WriteLine("✅ Form saved successfully");
 
         NavigationManager.NavigateTo("/HHA_Chart_Reviews");
-
     }
 }

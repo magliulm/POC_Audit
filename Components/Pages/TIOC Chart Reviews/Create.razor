@@ -200,7 +200,7 @@
         formModel_mv.FormName = "TIOC Chart Reviews";
 
         // Key can be calculated or left empty as you use it in your logic
-        formModel_mv.Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}";
+        formModel_mv.Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned.ToString("yyyy-MM-dd")}";
 
 
     }
@@ -213,7 +213,7 @@
                 Response = response,
                 MetadataId = metadata.Id,
                 Form = formModel_mv.FormName,
-                Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}",
+                Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned.ToString("yyyy-MM-dd")}",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow,
                 LastUpdatedBy = username,
@@ -253,7 +253,7 @@
                     Assigned_Reviewer = formModel_mv.Assigned_Reviewer,
                     Date_Assigned = formModel_mv.Date_Assigned,
                     Form = formModel_mv.FormName,
-                    Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned?.ToString("yyyy-MM-dd")}",
+                    Key = $"{formModel_mv.Patient_MRN}_{formModel_mv.FormName}_{formModel_mv.Date_Assigned.ToString("yyyy-MM-dd")}",
 
                 // Audit fields here:
                     CreatedBy = username,

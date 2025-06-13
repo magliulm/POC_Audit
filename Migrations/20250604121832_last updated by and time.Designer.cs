@@ -13,7 +13,7 @@ namespace CHHA_PlanOfCorrectionAudit.Migrations
 {
     [DbContext(typeof(CHHA_PlanOfCorrectionAuditContext))]
     [Migration("20250604121832_last updated by and time")]
-    partial class lastupdatedbyandtime
+    partial class Lastupdatedbyandtime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

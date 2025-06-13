@@ -5,7 +5,7 @@
 namespace CHHA_PlanOfCorrectionAudit.Migrations
 {
     /// <inheritdoc />
-    public partial class nullable : Migration
+    public partial class MakeNullableFieldsOptional : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
