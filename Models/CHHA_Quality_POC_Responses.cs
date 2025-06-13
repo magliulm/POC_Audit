@@ -8,7 +8,7 @@ namespace CHHA_PlanOfCorrectinAudit.Models {
         public string Patient_MRN { get; set; }
         public DateOnly? Date_Assigned { get; set; }
         public string Question { get; set; }
-        public string Response { get; set; }
+        public string? Response { get; set; }
         public string Form { get; set; }
         public string? Key { get; set; }
         public DateTime? LastUpdated { get; set; }
@@ -18,6 +18,7 @@ namespace CHHA_PlanOfCorrectinAudit.Models {
         public bool IsCurrentVersion { get; set; } // True only for the latest version
         public DateTime? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
+        public string RecordStatus { get; set; } = "Draft";
 
         // Foreign key and navigation property
 

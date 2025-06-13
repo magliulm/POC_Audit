@@ -1,4 +1,4 @@
-﻿@page "/HHA_Chart_Reviews/create"
+﻿@page "/HHA_Chart_Reviews/create_original"
 @using Microsoft.EntityFrameworkCore
 @using CHHA_PlanOfCorrectinAudit.Models
 @using CHHA_PlanOfCorrectinAudit.ViewModel
@@ -7,8 +7,6 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 <PageTitle>Create</PageTitle>
-
-<h1>Create</h1>
 
 <h2>CHHA Quality POC form</h2>
 <hr />
@@ -174,7 +172,6 @@
                 <InputText @bind-Value="formModel.CorrectedStaffName" class="form-control" />
             </div>
 
-
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
     </div>
@@ -189,47 +186,11 @@
     private FormInputModel_HHA formModel { get; set; } = new();
 
     protected override void OnInitialized() {
-        Console.WriteLine("✅ THIS IS A TEST Console.WriteLine OUTPUT for form3");
+        Console.WriteLine("✅ THIS IS A TEST Console.WriteLine OUTPUT for form");
         formModel.FormName = "HHA Chart Reviews";
 
-        // Pre-fill test data for quick testing
-        // formModel.Patient_MRN = "TEST123";
-        // formModel.Patient_Name = "John Doe";
-        // formModel.Patient_Status = "Active";
-        // formModel.Program = "Test Program";
-        // formModel.Borough_of_Care = "Brooklyn";
-        // formModel.Start_of_Care_Date = DateOnly.FromDateTime(DateTime.Today.AddDays(-30));
-        // formModel.Financial_Class = "Class A";
-        // formModel.Payer = "Medicare";
-        // formModel.Category = "Category 1";
-        // formModel.Assigned_Reviewer = "Reviewer A";
-        // formModel.Date_Assigned = DateOnly.FromDateTime(DateTime.Today.AddDays(-10));
-
-        // formModel.DateOfReview = DateTime.Today.AddDays(-5);
-        // formModel.DateOfReviewCompletion = DateTime.Today.AddDays(-3);
-        // formModel.EpisodeDischargeDate = DateTime.Today.AddDays(10);
-
-        // formModel.FrequencyDurationPresent = "Yes";
-        // formModel.DutiesCheckedOnPOC = "Yes";
-        // formModel.DutiesHaveFrequency = "Yes";
-        // formModel.DietMatch485 = "Yes";
-        // formModel.POCSignedByNurse = "Yes";
-        // formModel.IndividualizedTasks = "Yes";
-        // formModel.SupervisionEvery14Days = "Yes";
-
-        // formModel.ReviewerNotes = "Test reviewer notes";
-        // formModel.ChartReviewOutcome = "Passed";
-        // formModel.InvolvedStaff = "J. Smith";
-        // formModel.Column3 = "N/A";
-        // formModel.OverseeingManager = "Manager A";
-        // formModel.DateEscalated = DateTime.Today.AddDays(-2);
-        // formModel.AdditionalNotes = "Additional test notes";
-        // formModel.CorrectedStaffName = "Corrected Staff";
-
         // Key can be calculated or left empty as you use it in your logic
-        formModel.Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}";
-
-
+        formModel.Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}";
     }
 
     private CHHA_Quality_POC_Responses CreateResponse(string question, string? response, CHHA_Quality_POC_Metadata metadata, Guid recordId, string username) {
@@ -240,7 +201,7 @@
                 Response = response,
                 MetadataId = metadata.Id,
                 Form = formModel.FormName,
-                Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}",
+                Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}",
                 CreatedBy = username,
                 CreatedDate = DateTime.UtcNow,
                 LastUpdatedBy = username,
@@ -257,22 +218,6 @@
         Console.WriteLine("Form submission started");
 
         // Log form data to verify (whether valid or not)
-        Console.WriteLine($"Patient MRN: {formModel.Patient_MRN}");
-        Console.WriteLine($"Patient Name: {formModel.Patient_Name}");
-        Console.WriteLine($"Patient Status: {formModel.Patient_Status}");
-        Console.WriteLine($"Program: {formModel.Program}");
-        Console.WriteLine($"Borough of Care: {formModel.Borough_of_Care}");
-        Console.WriteLine($"Start of Care Date: {formModel.Start_of_Care_Date}");
-        Console.WriteLine($"Financial Class: {formModel.Financial_Class}");
-        Console.WriteLine($"Payer: {formModel.Payer}");
-        Console.WriteLine($"Category: {formModel.Category}");
-        Console.WriteLine($"Assigned Reviewer: {formModel.Assigned_Reviewer}");
-        Console.WriteLine($"Date Assigned: {formModel.Date_Assigned}");
-        Console.WriteLine($"Form: {formModel.FormName}");
-        Console.WriteLine($"Key: {formModel.Key}");
-        // Console.WriteLine($"Question1: {formModel.Question1}");
-        // Console.WriteLine($"Question2: {formModel.Question2}");
-        // Console.WriteLine($"Question3sdf: {formModel.Question3}");
 
         var username = HttpContextAccessor.HttpContext?.User?.Identity?.Name ?? "UnknownUser";
         var newRecordId = Guid.NewGuid();
@@ -281,8 +226,6 @@
 
         var metadata = await context.CHHA_Quality_POC_Metadata
             .FirstOrDefaultAsync(m => m.Patient_MRN == formModel.Patient_MRN);
-
-
 
         if (metadata == null) {
             metadata = new CHHA_Quality_POC_Metadata {
@@ -298,7 +241,7 @@
                     Assigned_Reviewer = formModel.Assigned_Reviewer,
                     Date_Assigned = formModel.Date_Assigned,
                     Form = formModel.FormName,
-                    Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned?.ToString("yyyy-MM-dd")}",
+                    Key = $"{formModel.Patient_MRN}_{formModel.FormName}_{formModel.Date_Assigned.ToString("yyyy-MM-dd")}",
 
                     // Audit fields here:
                     CreatedBy = username,

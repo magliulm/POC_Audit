@@ -28,8 +28,11 @@ namespace CHHA_PlanOfCorrectinAudit.Models {
         public bool IsCurrentVersion { get; set; } // True only for the latest version
         public DateTime? CreatedDate { get; set; }
         public string? CreatedBy { get; set; }
+        public string RecordStatus { get; set; } = "Draft";
 
         // Navigation property
         public ICollection<CHHA_Quality_POC_Responses>? Responses { get; set; } = new List<CHHA_Quality_POC_Responses>();
     }
 }
+
+

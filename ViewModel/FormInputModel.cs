@@ -33,6 +33,8 @@ namespace CHHA_PlanOfCorrectinAudit.ViewModel {
         public DateTime? DateEscalated { get; set; }
         public string AdditionalNotes { get; set; }
         public string CorrectedStaffName { get; set; }
+        public string RecordStatus { get; set; } = "Draft";
+
 
     }
 }

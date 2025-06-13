@@ -4,6 +4,7 @@ using CHHA_PlanOfCorrectionAudit.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CHHA_PlanOfCorrectionAudit.Migrations
 {
     [DbContext(typeof(CHHA_PlanOfCorrectionAuditContext))]
-    partial class CHHA_PlanOfCorrectionAuditContextModelSnapshot : ModelSnapshot
+    [Migration("20250612124257_MakeResponseNullable2")]
+    partial class MakeResponseNullable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
